@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile | FakeNewsDetection</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #388E3C;
+      --primary-light: #81C784;
+      --secondary: #2196F3;
+      --background: #121212;
+      --card-bg: #1e1e1e;
+      --text: #e0e0e0;
+      --text-light: #b0b0b0;
+      --border: #333333;
+      --success-bg: #1b3a1f;
+      --error-bg: #3a1d1d;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 90%;
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out forwards;
+      border: 1px solid var(--border);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 1.75rem;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"] {
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      transition: var(--transition);
+      background-color: #2a2a2a;
+      color: var(--text);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    }
+
+    button {
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .back-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+
+    .back-link a:hover {
+      color: var(--primary-light);
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+
+    .profile-img-preview {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .profile-img-preview img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 0.75rem;
+      border: 3px solid var(--primary);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .profile-img-preview img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1rem;
+      background: #2a2a2a;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .file-input-label:hover {
+      background: #333;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .file-input-label i {
+      margin-right: 0.5rem;
+      color: var(--primary);
+      transition: var(--transition);
+    }
+
+    .file-input-label:hover i {
+      transform: scale(1.1);
+    }
+
+    .status-message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      display: none;
+      animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success {
+      background-color: var(--success-bg);
+      color: #81C784;
+      display: block;
+    }
+
+    .error {
+      background-color: var(--error-bg);
+      color: #f44336;
+      display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+  <style>
+.flash-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: auto;
+  max-width: 300px;
+}
+.flash-message {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  opacity: 0.95;
+  animation: fadeIn 0.5s ease;
+}
+.flash-message.success { background-color: #28a745; }
+.flash-message.error { background-color: #dc3545; }
+.flash-message.warning { background-color: #ffc107; color: #212529; }
+.flash-message.info { background-color: #17a2b8; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 0.95; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+  <div class="container">
+    <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
+
+    <!-- Status message placeholder (can be shown/hidden with JavaScript) -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="profile-img-preview">
+      {% if user.profile_image %}
+        <img id="profileImage" src="{{ url_for('static', filename='uploads/' ~ user.profile_image) }}" alt="Profile Image">
+      {% else %}
+        <img id="profileImage" src="{{ url_for('static', filename='default_profile.png') }}" alt="Profile Image">
+      {% endif %}
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" id="profileForm">
+      <div class="form-group">
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" value="{{ user.full_name }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ user.email }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone_number">Phone Number</label>
+        <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" value="{{ user.phone_number }}" required>
+      </div>
+
+      <div class="form-group">
+        <label>Profile Picture</label>
+        <div class="file-input-wrapper">
+          <label class="file-input-label" for="profile_image">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span id="fileLabel">Choose a new profile image</span>
+          </label>
+          <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(this)">
+        </div>
+      </div>
+
+      <button type="submit">
+        <i class="fas fa-save"></i> Update Profile
+      </button>
+    </form>
+
+    <div class="back-link">
+      <a href="{{ url_for('user.user_dashboard') }}">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Preview selected image before upload
+    function previewImage(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const profileImg = document.getElementById('profileImage');
+          profileImg.src = e.target.result;
+          document.getElementById('fileLabel').textContent = input.files[0].name;
+          
+          // Add animation to profile image
+          profileImg.style.animation = 'none';
+          void profileImg.offsetWidth; // Trigger reflow
+          profileImg.style.animation = 'pulse 0.6s';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Add pulse animation for profile image
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Show status message if there's one in the URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get('status');
+      const message = urlParams.get('message');
+      
+      if (status && message) {
+        const statusElement = document.getElementById('statusMessage');
+        statusElement.textContent = message;
+        statusElement.classList.add(status === 'success' ? 'success' : 'error');
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          statusElement.style.animation = 'fadeOut 0.5s forwards';
+        }, 5000);
+      }
+    });
+
+    // Add fadeOut animation for status message
+    const fadeStyle = document.createElement('style');
+    fadeStyle.textContent = `
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          height: 0;
+          margin: 0;
+          padding: 0;
+        }
+      }
+    `;
+    document.head.appendChild(fadeStyle);
+  </script>
+  <script>
+  setTimeout(() => {
+    const messages = document.querySelectorAll('.flash-message');
+    messages.forEach(msg => {
+      msg.style.transition = 'opacity 0.5s ease';
+      msg.style.opacity = '0';
+      setTimeout(() => msg.remove(), 500);
+    });
+  }, 3000); // auto-hide after 3 seconds
+</script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!-- templates/navbar.html
+<style>
+  /* Navbar Styles */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(24, 24, 36, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(126, 34, 206, 0.2);
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  nav:hover {
+    background: rgba(33, 33, 48, 0.95);
+    border-bottom-color: rgba(126, 34, 206, 0.4);
+  }
+
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--light-200);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .logo i {
+    color: var(--primary-light);
+    font-size: 1.6rem;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover i {
+    transform: rotate(-15deg);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--light-300);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--light-200);
+    background: rgba(126, 34, 206, 0.1);
+  }
+
+  .nav-links a:hover::before {
+    width: 100%;
+  }
+
+  .nav-links a i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-links a:hover i {
+    transform: scale(1.1);
+  }
+
+  .nav-links a.active {
+    color: var(--light-200);
+    background: rgba(126, 34, 206, 0.2);
+  }
+
+  .nav-links a.active::before {
+    width: 100%;
+  }
+
+  .nav-links a.active i {
+    color: var(--primary-light);
+  }
+
+  /* Logout button special styling */
+  .nav-links a[href*="logout"] {
+    background: rgba(220, 38, 38, 0.1);
+    color: #ff6b6b;
+  }
+
+  .nav-links a[href*="logout"]:hover {
+    background: rgba(220, 38, 38, 0.2);
+    color: #ff5252;
+  }
+
+  .nav-links a[href*="logout"]::before {
+    background: var(--danger);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .nav-links {
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    nav {
+      flex-direction: column;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      gap: 0.5rem;
+    }
+
+    .nav-links a {
+      padding: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .nav-links a i {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .logo {
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      gap: 0.3rem;
+    }
+
+    .nav-links a span {
+      display: none;
+    }
+
+    .nav-links a i {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+<nav data-aos="fade-down">
+  <div class="logo"><i class="fas fa-shield-alt"></i> CrimePrediction</div>
+  <div class="nav-links">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if active_page == 'dashboard' }}"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="{{ url_for('auth.change_password') }}" class="{{ 'active' if active_page == 'security' }}"><i class="fas fa-lock"></i> Security</a>
+    <a href="{{ url_for('admin.edit_profile') }}" class="{{ 'active' if active_page == 'profile' }}"><i class="fas fa-user-secret"></i> Profile</a>
+    <a href="{{ url_for('admin.manage_complaints') }}" class="{{ 'active' if active_page == 'complaints' }}"><i class="fa-solid fa-book"></i> Complaints</a>
+    <a href="{{ url_for('admin.show_detections') }}" class="{{ 'active' if active_page == 'detections' }}"><i class="fa-solid fa-eye"></i> Detections</a>
+    <a href="{{ url_for('admin.detection_control') }}" class="{{ 'active' if active_page == 'detection_control' }}"><i class="fa-solid fa-play"></i> Start Detection</a>
+    <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</nav> -->
+
+
+
+<!-- templates/navbar.html -->
+<style>
+  /* Navbar Styles - Updated to match CRIMSON theme */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 7vh;
+    background: rgba(10, 25, 47, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  nav:hover {
+    background: rgba(23, 42, 69, 0.95);
+    border-bottom-color: rgba(100, 255, 218, 0.4);
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .logo i {
+    color: var(--accent);
+    font-size: 1.6rem;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover i {
+    transform: rotate(-15deg);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--highlight));
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--accent);
+    background: rgba(100, 255, 218, 0.1);
+  }
+
+  .nav-links a:hover::before {
+    width: 100%;
+  }
+
+  .nav-links a i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-links a:hover i {
+    transform: scale(1.1);
+  }
+
+  .nav-links a.active {
+    color: var(--accent);
+    background: rgba(100, 255, 218, 0.2);
+  }
+
+  .nav-links a.active::before {
+    width: 100%;
+  }
+
+  .nav-links a.active i {
+    color: var(--accent);
+  }
+
+  /* Logout button special styling */
+  .nav-links a[href*="logout"] {
+    background: rgba(255, 85, 85, 0.1);
+    color: var(--danger);
+  }
+
+  .nav-links a[href*="logout"]:hover {
+    background: rgba(255, 85, 85, 0.2);
+    color: var(--danger);
+  }
+
+  .nav-links a[href*="logout"]::before {
+    background: var(--danger);
+  }
+
+  /* Mobile menu toggle */
+  .menu-toggle {
+    display: none;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 1.5rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .nav-links {
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    nav {
+      padding: 1rem 5%;
+    }
+    
+    .nav-links {
+      gap: 0.8rem;
+    }
+    
+    .nav-links a {
+      padding: 0.5rem 0.8rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 5%;
+    }
+    
+    .logo {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .menu-toggle {
+      display: block;
+    }
+    
+    .nav-links {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .nav-links.active {
+      display: flex;
+    }
+    
+    .nav-links a {
+      width: 100%;
+      padding: 0.8rem 0;
+      justify-content: center;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+    }
+    
+    .nav-links a::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .logo {
+      font-size: 1.3rem;
+    }
+    
+    .logo i {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+
+<nav>
+  <div class="logo">
+    <span><i class="fas fa-shield-alt"></i> CRIMSON</span>
+    <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
+  </div>
+  
+  <div class="nav-links" id="navLinks">
+    <a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if active_page == 'dashboard' }}">
+      <i class="fas fa-home"></i> <span>Dashboard</span>
+    </a>
+    <a href="{{ url_for('auth.change_password') }}" class="{{ 'active' if active_page == 'security' }}">
+      <i class="fas fa-lock"></i> <span>Security</span>
+    </a>
+    <a href="{{ url_for('admin.edit_profile') }}" class="{{ 'active' if active_page == 'profile' }}">
+      <i class="fas fa-user-secret"></i> <span>Profile</span>
+    </a>
+    <a href="{{ url_for('admin.manage_complaints') }}" class="{{ 'active' if active_page == 'complaints' }}">
+      <i class="fa-solid fa-book"></i> <span>Complaints</span>
+    </a>
+    <a href="{{ url_for('admin.show_detections') }}" class="{{ 'active' if active_page == 'detections' }}">
+      <i class="fa-solid fa-eye"></i> <span>Detections</span>
+    </a>
+    <a href="{{ url_for('admin.detection_control') }}" class="{{ 'active' if active_page == 'detection_control' }}">
+      <i class="fa-solid fa-play"></i> <span>Start Detection</span>
+    </a>
+    <a href="{{ url_for('auth.logout') }}">
+      <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+    </a>
+  </div>
+</nav>
+
+<script>
+  function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('active');
+  }
+  
+  // Close menu when clicking outside on mobile
+  document.addEventListener('click', function(event) {
+    const nav = document.querySelector('nav');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (window.innerWidth <= 768 && 
+        !nav.contains(event.target) && 
+        event.target !== menuToggle) {
+      navLinks.classList.remove('active');
+    }
+  });
+</script>

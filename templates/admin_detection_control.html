@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRIMSON | Detection Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a192f;
+            --secondary: #172a45;
+            --accent: #64ffda;
+            --text: #ccd6f6;
+            --highlight: #1e90ff;
+            --danger: #ff5555;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 75% 30%, var(--secondary) 0%, var(--primary) 50%);
+            animation: pulse 15s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { background-size: 100% 100%; }
+            50% { background-size: 150% 150%; }
+            100% { background-size: 100% 100%; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="20" cy="20" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="80" cy="50" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="50" cy="80" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="10" cy="70" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="90" cy="20" r="0.5" fill="rgba(30,144,255,0.3)"/></svg>');
+            background-size: 100px 100px;
+            animation: particlesMove 20s linear infinite;
+        }
+
+        @keyframes particlesMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, var(--accent), var(--highlight));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--highlight));
+            margin: 0.5rem auto;
+            border-radius: 3px;
+        }
+
+        .detection-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .detection-card {
+            background: rgba(23, 42, 69, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .detection-card.criminal {
+            border-top: 3px solid var(--danger);
+        }
+
+        .detection-card.weapon {
+            border-top: 3px solid var(--warning);
+        }
+
+        .detection-card.violence {
+            border-top: 3px solid var(--accent);
+        }
+
+        .detection-card h3 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 400;
+        }
+
+        .detection-card h3 i {
+            font-size: 1.5rem;
+        }
+
+        .criminal h3 i {
+            color: var(--danger);
+        }
+
+        .weapon h3 i {
+            color: var(--warning);
+        }
+
+        .violence h3 i {
+            color: var(--accent);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--accent), var(--highlight));
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(30, 144, 255, 0.8);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, var(--danger), #ff0000);
+            color: var(--text);
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
+        }
+
+        .stop-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 85, 85, 0.8);
+        }
+
+        .logs-container {
+            background-color: rgba(10, 25, 47, 0.5);
+            border-radius: 6px;
+            padding: 1rem;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            position: relative;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .logs-container pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--danger);
+        }
+
+        .status-active {
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(100, 255, 218, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0);
+            }
+        }
+
+        .timestamp {
+            color: var(--highlight);
+            font-size: 0.75rem;
+        }
+
+        .control-message {
+            color: var(--accent);
+        }
+
+        .alert-message {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            position: relative;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(10, 25, 47, 0.5);
+            color: var(--highlight);
+            font-style: italic;
+        }
+
+        /* Scrollbar styling */
+        .logs-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .logs-container::-webkit-scrollbar-track {
+            background: rgba(10, 25, 47, 0.5);
+        }
+
+        .logs-container::-webkit-scrollbar-thumb {
+            background: rgba(100, 255, 218, 0.3);
+            border-radius: 4px;
+        }
+
+        .logs-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 255, 218, 0.5);
+        }
+
+        /* Connection lost animation */
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .connection-lost {
+            animation: flash 1s infinite;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        /* Fade-in animation for images */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .detection-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in-section {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body style="padding-top: 8vh;">
+
+    {% include 'navbar.html' %}
+    <div class="bg-animation"></div>
+    <div class="particles"></div>
+
+    
+
+    <div class="container">
+        <h2 class="fade-in-section"><i class="fas fa-sliders-h"></i> Detection Control Panel</h2>
+
+        <div class="detection-panel">
+            <!-- Criminal Detection -->
+            <div class="detection-card criminal fade-in-section delay-1">
+                <h3><i class="fas fa-user-secret"></i> Criminal Detection</h3>
+                <div class="button-group">
+                    <button class="cta-button start-btn" id="startCriminalBtn">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="cta-button stop-btn" id="stopCriminalBtn">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+                <div class="logs-container">
+                    <div class="status-indicator" id="criminalStatus"></div>
+                    <pre id="criminalLogs"></pre>
+                </div>
+                <div class="image-container">
+                    <img src="https://ayudawp.com/wp-content/uploads/2020/07/face-recognition-WordPress.gif" alt="Criminal Detection" class="fade-in"
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder\'><i class=\'fas fa-user-secret\'></i> Criminal Detection Feed</div>';">
+                </div>
+            </div>
+
+            <!-- Weapon Detection -->
+            <div class="detection-card weapon fade-in-section delay-2">
+                <h3><i class="fas fa-gun"></i> Weapon Detection</h3>
+                <div class="button-group">
+                    <button class="cta-button start-btn" id="startWeaponBtn">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="cta-button stop-btn" id="stopWeaponBtn">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+                <div class="logs-container">
+                    <div class="status-indicator" id="weaponStatus"></div>
+                    <pre id="weaponLogs"></pre>
+                </div>
+                <div class="image-container">
+                    <img src="https://cdna.artstation.com/p/assets/images/images/029/035/772/original/xiao-yang-colt-de.gif?1596253119" alt="Weapon Detection" class="fade-in"
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder\'><i class=\'fas fa-gun\'></i> Weapon Detection Feed</div>';">
+                </div>
+            </div>
+
+            <!-- Violence Detection -->
+            <div class="detection-card violence fade-in-section delay-3">
+                <h3><i class="fas fa-hand-fist"></i> Violence Detection</h3>
+                <div class="button-group">
+                    <button class="cta-button start-btn" id="startViolenceBtn">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="cta-button stop-btn" id="stopViolenceBtn">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+                <div class="logs-container">
+                    <div class="status-indicator" id="violenceStatus"></div>
+                    <pre id="violenceLogs"></pre>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.pinimg.com/originals/1f/b1/bc/1fb1bcc03bd6ac954312454864a2694b.gif" alt="Violence Detection" class="fade-in"
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder\'><i class=\'fas fa-hand-fist\'></i> Violence Detection Feed</div>';">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setupDetector(buttonStartId, buttonStopId, startUrl, stopUrl, logsUrl, logElemId, statusElemId) {
+            const logsElem = document.getElementById(logElemId);
+            const statusElem = document.getElementById(statusElemId);
+            let es = null;
+            let isActive = false;
+
+            function addLog(message, type = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = document.createElement('div');
+                logEntry.innerHTML = `
+                    <span class="timestamp">[${timestamp}]</span>
+                    <span class="${type}-message">${message}</span>
+                `;
+                logsElem.appendChild(logEntry);
+                logsElem.scrollTop = logsElem.scrollHeight;
+            }
+
+            function updateStatus(active) {
+                isActive = active;
+                if (active) {
+                    statusElem.classList.add('status-active');
+                } else {
+                    statusElem.classList.remove('status-active');
+                }
+            }
+
+            document.getElementById(buttonStartId).onclick = async () => {
+                try {
+                    const res = await fetch(startUrl);
+                    const data = await res.json();
+                    addLog(`[CONTROL] ${data.message}`, 'control');
+
+                    if (data.ok && !es) {
+                        updateStatus(true);
+                        es = new EventSource(logsUrl);
+
+                        es.onmessage = (e) => {
+                            try {
+                                const logData = JSON.parse(e.data);
+                                if (logData.alert) {
+                                    addLog(`ALERT: ${logData.message}`, 'alert');
+                                } else {
+                                    addLog(logData.message, 'info');
+                                }
+                            } catch {
+                                addLog(e.data, 'info');
+                            }
+                        };
+
+                        es.onerror = () => {
+                            addLog('Connection lost - attempting to reconnect...', 'alert');
+                            statusElem.classList.add('connection-lost');
+                            setTimeout(() => {
+                                statusElem.classList.remove('connection-lost');
+                            }, 3000);
+                        };
+                    }
+                } catch (error) {
+                    addLog(`Error: ${error.message}`, 'alert');
+                }
+            };
+
+            document.getElementById(buttonStopId).onclick = async () => {
+                try {
+                    const res = await fetch(stopUrl);
+                    const data = await res.json();
+                    addLog(`[CONTROL] ${data.message}`, 'control');
+                    updateStatus(false);
+
+                    if (es) {
+                        es.close();
+                        es = null;
+                    }
+                } catch (error) {
+                    addLog(`Error: ${error.message}`, 'alert');
+                }
+            };
+        }
+
+        // Initialize all detectors
+        document.addEventListener('DOMContentLoaded', () => {
+            setupDetector(
+                'startCriminalBtn',
+                'stopCriminalBtn',
+                '/admin/start_criminal_detection',
+                '/admin/stop_criminal_detection',
+                '/admin/criminal_detection_logs',
+                'criminalLogs',
+                'criminalStatus'
+            );
+
+            setupDetector(
+                'startWeaponBtn',
+                'stopWeaponBtn',
+                '/admin/start_weapon_detection',
+                '/admin/stop_weapon_detection',
+                '/admin/weapon_detection_logs',
+                'weaponLogs',
+                'weaponStatus'
+            );
+
+            setupDetector(
+                'startViolenceBtn',
+                'stopViolenceBtn',
+                '/admin/start_violence_detection',
+                '/admin/stop_violence_detection',
+                '/admin/violence_detection_logs',
+                'violenceLogs',
+                'violenceStatus'
+            );
+
+            // Animation trigger on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-section');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.detection-card').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+    <script>
+ 
+</script>
+
+</body>
+</html>

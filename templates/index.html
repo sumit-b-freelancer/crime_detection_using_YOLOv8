@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRIMSON | Advanced Crime Detection Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a192f;
+            --secondary: #172a45;
+            --accent: #64ffda;
+            --text: #ccd6f6;
+            --highlight: #1e90ff;
+            --danger: #ff5555;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+
+        }
+
+        body::-webkit-scrollbar {
+    display: none;
+}
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 75% 30%, var(--secondary) 0%, var(--primary) 50%);
+            animation: pulse 15s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { background-size: 100% 100%; }
+            50% { background-size: 150% 150%; }
+            100% { background-size: 100% 100%; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="20" cy="20" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="80" cy="50" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="50" cy="80" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="10" cy="70" r="0.5" fill="rgba(30,144,255,0.3)"/><circle cx="90" cy="20" r="0.5" fill="rgba(30,144,255,0.3)"/></svg>');
+            background-size: 100px 100px;
+            animation: particlesMove 20s linear infinite;
+        }
+
+        @keyframes particlesMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            background-color: rgba(10, 25, 47, 0.8);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            position: sticky;
+            top: 0;
+            height: 3vh;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--highlight);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--accent), var(--highlight));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+            line-height: 1.2;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px rgba(100, 255, 218, 0.5); }
+            to { text-shadow: 0 0 20px rgba(30, 144, 255, 0.8); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 900px;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--highlight));
+            color: var(--primary);
+            border: none;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-button.outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .cta-button.danger {
+            background: linear-gradient(135deg, var(--danger), #ff0000);
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(30, 144, 255, 0.8);
+        }
+
+        .cta-button.outline:hover {
+            box-shadow: 0 0 25px rgba(100, 255, 218, 0.5);
+        }
+
+        .cta-button.danger:hover {
+            box-shadow: 0 0 25px rgba(255, 85, 85, 0.8);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(23, 42, 69, 0.6);
+            border-radius: 10px;
+            min-width: 200px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--accent), var(--highlight));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: rgba(204, 214, 246, 0.8);
+        }
+
+        .features {
+            padding: 5rem 5%;
+            background-color: var(--secondary);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--accent);
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--highlight));
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-size: 1.2rem;
+            color: rgba(204, 214, 246, 0.9);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background-color: rgba(23, 42, 69, 0.7);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--highlight);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            margin-bottom: 1.5rem;
+            color: rgba(204, 214, 246, 0.8);
+        }
+
+        .feature-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.8rem;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            background-color: var(--primary);
+            padding: 5rem 5%;
+            text-align: center;
+        }
+
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tech-item {
+            background: rgba(10, 25, 47, 0.8);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+            width: 150px;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+        }
+
+        .tech-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .workflow {
+            padding: 5rem 5%;
+            background-color: var(--secondary);
+            text-align: center;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(23, 42, 69, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .step-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--accent);
+            min-width: 60px;
+            height: 60px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            text-align: left;
+        }
+
+        .step-content p {
+            color: rgba(204, 214, 246, 0.8);
+            text-align: left;
+        }
+
+        .dashboard-preview {
+            height: 600px;
+            background: url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+            position: relative;
+            margin-top: 5rem;
+        }
+
+        .dashboard-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(10, 25, 47, 0.95) 0%, rgba(10, 25, 47, 0.85) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .dashboard-content {
+            max-width: 1200px;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .dashboard-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .dashboard-text h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .dashboard-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .dashboard-features {
+            flex: 1;
+        }
+
+        .dashboard-feature {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .dashboard-feature i {
+            color: var(--highlight);
+            font-size: 1.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .testimonials {
+            padding: 5rem 5%;
+            background-color: var(--primary);
+            text-align: center;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: rgba(23, 42, 69, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            text-align: left;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            top: -1.5rem;
+            left: -1rem;
+            color: rgba(100, 255, 218, 0.1);
+            font-family: serif;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .author-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: rgba(204, 214, 246, 0.7);
+        }
+
+        .cta-section {
+            padding: 5rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+
+        .cta-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            background-color: var(--secondary);
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-column h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: rgba(204, 214, 246, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(204, 214, 246, 0.7);
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .dashboard-content {
+                flex-direction: column;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-content h3,
+            .step-content p {
+                text-align: center;
+            }
+
+            .step-number {
+                margin-bottom: 1rem;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="particles"></div>
+
+    <header>
+        <div class="logo">CRIM<span>SON</span></div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" onclick="window.location='/login'">Login</a></li>
+                <li><a href="#" onclick="window.location='/register'">Register</a></li>
+
+                
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="padding-bottom:10vh">
+            <h1 class="fade-in">Next-Gen Crime Detection & Prevention</h1>
+            <p class="fade-in delay-1">CRIMSON is an advanced AI-powered surveillance system that combines facial recognition, weapon detection, and violent activity identification to create safer communities. Our real-time monitoring platform helps law enforcement identify threats before they escalate.</p>
+
+            <div class="cta-container fade-in delay-2">
+    <button class="cta-button" onclick="window.location.href='/register'">
+        <i class="fas fa-play"></i> Live Demo
+    </button>
+
+    <button class="cta-button outline" onclick="window.location.href='/register'">
+        <i class="fas fa-book"></i> Documentation
+    </button>
+
+    <button class="cta-button danger" onclick="window.location.href='/register'">
+        <i class="fas fa-bell"></i> Emergency Alert
+    </button>
+</div>
+
+
+            <div class="stats fade-in delay-3">
+                <div class="stat-item">
+                    <div class="stat-number">98.7%</div>
+                    <div class="stat-label">Detection Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Real-time Monitoring</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3.2s</div>
+                    <div class="stat-label">Average Response Time</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Crimes Prevented</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2 class="section-title fade-in">Core Detection Capabilities</h2>
+            <p class="section-subtitle fade-in delay-1">Our AI-powered system specializes in identifying multiple security threats simultaneously with unprecedented accuracy</p>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in delay-1">
+                    <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
+                    <h3>Criminal Recognition</h3>
+                    <p>Advanced facial recognition powered by OpenCV and deep learning models to identify known criminals from databases in real-time.</p>
+                    <ul class="feature-list">
+                        <li>Matches against criminal databases with 99.2% accuracy</li>
+                        <li>Works with low-light and low-resolution footage</li>
+                        <li>Tracks individuals across multiple cameras</li>
+                        <li>Age, gender, and emotion estimation</li>
+                        <li>Real-time alerts with suspect information</li>
+                    </ul>
+                </div>
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon"><i class="fas fa-gun"></i></div>
+                    <h3>Weapon Detection</h3>
+                    <p>YOLO-based object detection trained to identify firearms, knives, and other dangerous weapons with high accuracy.</p>
+                    <ul class="feature-list">
+                        <li>Detects 25+ weapon types including concealed firearms</li>
+                        <li>Operates at 60 FPS on standard hardware</li>
+                        <li>Recognizes brandished vs. concealed weapons</li>
+                        <li>Integrated with threat level assessment</li>
+                        <li>Works with thermal imaging for hidden weapons</li>
+                    </ul>
+                </div>
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon"><i class="fas fa-person-falling-burst"></i></div>
+                    <h3>Violence Identification</h3>
+                    <p>Behavioral analysis algorithms that detect aggressive movements, fights, and suspicious activities in surveillance feeds.</p>
+                    <ul class="feature-list">
+                        <li>Recognizes 15+ violent behaviors and altercations</li>
+                        <li>Crowd behavior analysis for early warning</li>
+                        <li>Abnormal activity detection</li>
+                        <li>Integrated audio analysis for screams/gunshots</li>
+                        <li>Predictive threat scoring system</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in delay-2">
+                    <div class="feature-icon"><i class="fas fa-database"></i></div>
+                    <h3>Centralized Criminal Database</h3>
+                    <p>Secure storage for all detected criminal records with advanced search and analytics capabilities.</p>
+                    <ul class="feature-list">
+                        <li>Facial feature vector storage</li>
+                        <li>Criminal record association</li>
+                        <li>Geospatial tracking history</li>
+                        <li>Behavior pattern analysis</li>
+                        <li>Encrypted and access-controlled</li>
+                    </ul>
+                </div>
+                <div class="feature-card fade-in delay-3">
+                    <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Real-time Location Tracking</h3>
+                    <p>Geospatial mapping of all detected threats with historical movement patterns.</p>
+                    <ul class="feature-list">
+                        <li>Live GPS coordinates for all alerts</li>
+                        <li>Heatmaps of criminal activity</li>
+                        <li>Predictive movement modeling</li>
+                        <li>Integration with city camera networks</li>
+                        <li>Automated patrol routing</li>
+                    </ul>
+                </div>
+                <div class="feature-card fade-in delay-4">
+                    <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                    <h3>Automated Alert System</h3>
+                    <p>Instant notifications to law enforcement with all relevant threat information.</p>
+                    <ul class="feature-list">
+                        <li>Multi-channel alerts (SMS, email, app)</li>
+                        <li>Threat level classification</li>
+                        <li>Automatic evidence collection</li>
+                        <li>Nearby officer notification</li>
+                        <li>Custom escalation protocols</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="technology" class="tech-stack">
+            <h2 class="section-title fade-in">Advanced Technology Stack</h2>
+            <p class="section-subtitle fade-in delay-1">Powered by cutting-edge AI and computer vision technologies</p>
+
+            <div class="tech-grid">
+                <div class="tech-item fade-in delay-1">
+                    <div class="tech-icon"><i class="fab fa-python"></i></div>
+                    <div class="tech-label">Python 3.13</div>
+                </div>
+                <div class="tech-item fade-in delay-2">
+                    <div class="tech-icon"><i class="fas fa-robot"></i></div>
+                    <div class="tech-label">OpenCV</div>
+                </div>
+                <div class="tech-item fade-in delay-3">
+                    <div class="tech-icon"><i class="fas fa-brain"></i></div>
+                    <div class="tech-label">YOLOv8</div>
+                </div>
+                <div class="tech-item fade-in delay-1">
+                    <div class="tech-icon"><i class="fas fa-network-wired"></i></div>
+                    <div class="tech-label">TensorFlow</div>
+                </div>
+                <div class="tech-item fade-in delay-2">
+                    <div class="tech-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="tech-label">DeepFace</div>
+                </div>
+                <div class="tech-item fade-in delay-3">
+                    <div class="tech-icon"><i class="fas fa-database"></i></div>
+                    <div class="tech-label">MongoDB</div>
+                </div>
+                <div class="tech-item fade-in delay-1">
+                    <div class="tech-icon"><i class="fas fa-cloud"></i></div>
+                    <div class="tech-label">AWS</div>
+                </div>
+                <div class="tech-item fade-in delay-2">
+                    <div class="tech-icon"><i class="fas fa-code"></i></div>
+                    <div class="tech-label">Flask API</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="workflow">
+            <h2 class="section-title fade-in">System Workflow</h2>
+            <p class="section-subtitle fade-in delay-1">How CRIMSON processes and responds to potential threats</p>
+
+            <div class="steps">
+                <div class="step fade-in delay-1">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Video Feed Acquisition</h3>
+                        <p>System connects to surveillance cameras (CCTV, body cams, drones) and begins real-time video stream processing. Supports RTSP, HTTP streams, and local video files.</p>
+                    </div>
+                </div>
+                <div class="step fade-in delay-2">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Frame Analysis & Detection</h3>
+                        <p>Each video frame is processed through multiple AI models simultaneously: facial recognition for criminals, YOLO for weapons, and pose estimation for violent behavior.</p>
+                    </div>
+                </div>
+                <div class="step fade-in delay-3">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Threat Verification</h3>
+                        <p>Potential matches are cross-verified against criminal databases and analyzed for confidence levels. Multiple frames are examined to reduce false positives.</p>
+                    </div>
+                </div>
+                <div class="step fade-in delay-4">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Alert Generation</h3>
+                        <p>Verified threats trigger automated alerts containing suspect images, last known location, weapon details, and suggested response protocols.</p>
+                    </div>
+                </div>
+                <div class="step fade-in delay-1">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Evidence Archiving</h3>
+                        <p>All detection events are automatically logged with timestamps, GPS coordinates, and video evidence stored in encrypted databases for investigative use.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard-preview">
+            <div class="dashboard-overlay">
+                <div class="dashboard-content">
+                    <div class="dashboard-text fade-in">
+                        <h2>Command Center Dashboard</h2>
+                        <p>The CRIMSON dashboard provides law enforcement with a comprehensive view of all active threats, historical data, and real-time analytics. Our interface is designed for rapid response and situational awareness.</p>
+                        <p>Key operational data is displayed on interactive maps with layered threat visualization. Administrators can review detection logs, manage criminal databases, and configure alert protocols.</p>
+                        <button class="cta-button outline" style="margin-top: 1.5rem;" onclick="window.location.href='/login'">
+    <i class="fas fa-desktop"></i> View Dashboard Samples
+</button>
+
+                    </div>
+                    <div class="dashboard-features fade-in delay-1">
+                        <div class="dashboard-feature">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <div>
+                                <h4>Live Threat Map</h4>
+                                <p>Geospatial display of all active alerts with severity indicators and movement tracking.</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-feature">
+                            <i class="fas fa-video"></i>
+                            <div>
+                                <h4>Multi-Camera View</h4>
+                                <p>Simultaneous monitoring of up to 16 camera feeds with AI analysis overlays.</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-feature">
+                            <i class="fas fa-chart-line"></i>
+                            <div>
+                                <h4>Analytics Console</h4>
+                                <p>Real-time crime statistics and predictive hotspot identification.</p>
+                            </div>
+                        </div>
+                        <div class="dashboard-feature">
+                            <i class="fas fa-user-shield"></i>
+                            <div>
+                                <h4>Officer Dispatch</h4>
+                                <p>Integrated system to alert and direct nearby patrol units to threats.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!--        <section class="testimonials">-->
+<!--            <h2 class="section-title fade-in">Trusted by Law Enforcement</h2>-->
+<!--            <p class="section-subtitle fade-in delay-1">What security professionals say about our system</p>-->
+
+<!--            <div class="testimonial-grid">-->
+<!--                <div class="testimonial-card fade-in delay-1">-->
+<!--                    <div class="testimonial-text">-->
+<!--                        CRIMSON has reduced our response time to violent incidents by 68%. The weapon detection system identified an armed suspect before our officers even arrived on scene, allowing them to approach safely.-->
+<!--                    </div>-->
+<!--                    <div class="testimonial-author">-->
+<!--                        <div class="author-avatar">CP</div>-->
+<!--                        <div class="author-info">-->
+<!--                            <h4>Chief Peterson</h4>-->
+<!--                            <p>Metropolitan Police Department</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="testimonial-card fade-in delay-2">-->
+<!--                    <div class="testimonial-text">-->
+<!--                        The facial recognition matched a wanted felon who had changed his appearance. We wouldn't have identified him without CRIMSON's advanced algorithms analyzing subtle facial features.-->
+<!--                    </div>-->
+<!--                    <div class="testimonial-author">-->
+<!--                        <div class="author-avatar">DS</div>-->
+<!--                        <div class="author-info">-->
+<!--                            <h4>Detective Simmons</h4>-->
+<!--                            <p>Major Crimes Unit</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="testimonial-card fade-in delay-3">-->
+<!--                    <div class="testimonial-text">-->
+<!--                        During the downtown festival, the violence detection system alerted us to a developing fight in the crowd before any 911 calls came in. We prevented what could have been a riot.-->
+<!--                    </div>-->
+<!--                    <div class="testimonial-author">-->
+<!--                        <div class="author-avatar">LT</div>-->
+<!--                        <div class="author-info">-->
+<!--                            <h4>Lieutenant Torres</h4>-->
+<!--                            <p>Special Events Command</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </section>-->
+
+        <section id="contact" class="cta-section">
+            <h2 class="fade-in">Ready to Enhance Your Security?</h2>
+            <p class="fade-in delay-1">Contact our team to schedule a demonstration or discuss deployment options for your organization.</p>
+            <div class="cta-container fade-in delay-2">
+                <button class="cta-button" onclick="window.location.href='/login'">
+    <i class="fas fa-calendar"></i> Request Demo
+</button>
+
+<button class="cta-button outline" onclick="window.location.href='/login'">
+    <i class="fas fa-file-contract"></i> White Paper
+</button>
+
+                <button class="cta-button" onclick="window.location.href='tel:+919482376818'">
+  <i class="fas fa-phone"></i> Contact Sales
+</button>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>CRIMSON</h3>
+                <p>Advanced AI-powered surveillance and threat detection system for law enforcement and security professionals.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Solutions</h3>
+                <ul>
+                    <li><a href="#">Law Enforcement</a></li>
+                    <li><a href="#">Public Safety</a></li>
+                    <li><a href="#">Critical Infrastructure</a></li>
+                    <li><a href="#">Retail Security</a></li>
+                    <li><a href="#">Campus Safety</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Research Papers</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">CRIMSON SECURITY SYSTEMS</div>
+            <p class="copyright">© 2025 Crimson Security Technologies. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Animation trigger on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('section, .feature-card, .tech-item, .step, .testimonial-card').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

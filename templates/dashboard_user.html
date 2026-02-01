@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard | CrimePrediction</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #121a24;
+      --primary-dark: #0a0f17;
+      --secondary: #ff4d4d;
+      --accent: #4d88ff;
+      --light-bg: #0d1117;
+      --dark-text: #e0e0e0;
+      --light-text: #f0f0f0;
+      --alert: #ff4d4d;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --gray: #7a8c9c;
+      --white: #ffffff;
+      --card-bg: #1a222d;
+      --border-color: #2a3a4a;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light-bg);
+      margin: 0;
+      padding: 0;
+      color: var(--dark-text);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: var(--primary);
+      color: var(--light-text);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .navbar-brand {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      transform: translateX(5px);
+    }
+
+    .navbar-brand i {
+      color: var(--secondary);
+      transition: transform 0.5s ease;
+    }
+
+    .navbar-brand:hover i {
+      transform: rotate(15deg);
+    }
+
+    .navbar-options {
+      display: flex;
+      gap: 25px;
+    }
+
+    .navbar-options a {
+      color: var(--light-text);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .navbar-options a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .navbar-options a:hover::before {
+      width: 100%;
+    }
+
+    .navbar-options a:hover {
+      color: var(--accent);
+    }
+
+    .navbar-options a i {
+      font-size: 0.9em;
+    }
+
+    .dashboard-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 65px);
+      padding: 30px 20px;
+      background: radial-gradient(circle at top right, #121a24 0%, #0a0f17 100%);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .dashboard {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      border: 1px solid var(--border-color);
+      transform: translateY(0);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent 0%,
+        transparent 45%,
+        rgba(77, 136, 255, 0.1) 50%,
+        transparent 55%,
+        transparent 100%
+      );
+      transform: rotate(30deg);
+      animation: shine 6s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: rotate(30deg) translate(-30%, -30%); }
+      100% { transform: rotate(30deg) translate(30%, 30%); }
+    }
+
+    .dashboard:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--light-text);
+      margin-bottom: 15px;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      animation: slideInDown 0.8s ease-out;
+    }
+
+    @keyframes slideInDown {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 3px;
+      animation: expand 0.8s ease-out;
+    }
+
+    @keyframes expand {
+      from { width: 0; }
+      to { width: 50px; }
+    }
+
+    .user-name {
+      color: var(--accent);
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(77, 136, 255, 0.3);
+    }
+
+    p {
+      font-size: 16px;
+      color: var(--gray);
+      margin-bottom: 30px;
+      line-height: 1.6;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .construction-notice {
+      background-color: rgba(243, 156, 18, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid var(--warning);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.2); }
+      70% { box-shadow: 0 0 0 10px rgba(243, 156, 18, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); }
+    }
+
+    .construction-notice i {
+      color: var(--warning);
+      margin-right: 8px;
+    }
+
+    .dashboard-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .dashboard-options a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 14px 20px;
+      border-radius: 8px;
+      transition: all 0.4s ease;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .dashboard-options a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      transition: width 0.4s ease;
+      z-index: -1;
+    }
+
+    .dashboard-options a:hover::before {
+      width: 100%;
+    }
+
+    .dashboard-options a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .dashboard-options a i {
+      font-size: 1.1em;
+      transition: transform 0.3s ease;
+    }
+
+    .dashboard-options a:hover i {
+      transform: translateX(3px);
+    }
+
+    .dashboard-options a.logout-btn {
+      background: linear-gradient(135deg, var(--secondary) 0%, #c0392b 100%);
+    }
+
+    .dashboard-options a.logout-btn::before {
+      background: linear-gradient(135deg, #c0392b 0%, var(--secondary) 100%);
+    }
+
+    .features-coming {
+      margin-top: 30px;
+      text-align: left;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .features-coming h3 {
+      color: var(--light-text);
+      margin-bottom: 15px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .feature-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px dashed var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .feature-list li:hover {
+      transform: translateX(5px);
+      border-bottom-color: var(--accent);
+    }
+
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-list li i {
+      color: var(--success);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-list li:hover i {
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+      
+      .navbar-options {
+        gap: 15px;
+      }
+
+      .dashboard {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .navbar-options {
+        width: 100%;
+        justify-content: space-around;
+      }
+
+      .dashboard-options a {
+        padding: 12px 15px;
+        font-size: 14px;
+      }
+      
+      .dashboard::before {
+        animation: none;
+      }
+    }
+  </style>
+  <style>
+.flash-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  width: auto;
+  max-width: 300px;
+}
+.flash-message {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  opacity: 0.95;
+  animation: fadeIn 0.5s ease;
+}
+.flash-message.success { background-color: #28a745; }
+.flash-message.error { background-color: #dc3545; }
+.flash-message.warning { background-color: #ffc107; color: #212529; }
+.flash-message.info { background-color: #17a2b8; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 0.95; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+  <nav class="navbar">
+    <a href="#" class="navbar-brand">
+      <i class="fas fa-shield-alt"></i> CrimePredictor
+    </a>
+    <div class="navbar-options">
+        <a href="{{ url_for('user.user_dashboard') }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+             <a href="{{ url_for('user.edit_profile') }}">
+    <i class="fas fa-user-edit"></i> Edit Profile
+  </a>
+      <a href="{{ url_for('auth.change_password') }}">
+        <i class="fas fa-key"></i> Change Password
+      </a>
+      <a href="{{ url_for('user.view_notifications') }}"><i class="fas fa-bell"></i> Alerts</a>
+      <a href="{{ url_for('auth.logout') }}">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="dashboard">
+      <h1>Welcome, <span class="user-name">{{ user.full_name }}</span></h1>
+      <p>Your personal dashboard for crime prediction and analysis with advanced machine learning tools.</p>
+      
+      <div class="construction-notice">
+        <i class="fas fa-tools"></i>
+        <span>Your dashboard is under construction. More powerful features coming soon!</span>
+      </div>
+      
+      <div class="features-coming">
+        <h3>Coming Features:</h3>
+        <ul class="feature-list">
+          <li><i class="fas fa-check-circle"></i> Real-time crime prediction</li>
+          <li><i class="fas fa-check-circle"></i> Hotspot analysis</li>
+          <li><i class="fas fa-check-circle"></i> Historical crime patterns</li>
+          <li><i class="fas fa-check-circle"></i> Personalized safety alerts</li>
+        </ul>
+      </div>
+      
+      <div class="dashboard-options">
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+  setTimeout(() => {
+    const messages = document.querySelectorAll('.flash-message');
+    messages.forEach(msg => {
+      msg.style.transition = 'opacity 0.5s ease';
+      msg.style.opacity = '0';
+      setTimeout(() => msg.remove(), 500);
+    });
+  }, 3000); // auto-hide after 3 seconds
+</script>
+</body>
+</html>

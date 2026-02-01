@@ -1,0 +1,97 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Database
+*.db
+*.db-journal
+
+# Logs
+*.log
+logs/
+
+# Images and videos that might contain sensitive data
+static/detectprof/
+static/violenceprof/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Credentials files
+credentials.json
+*.pem
+*.key
+*.crt
+*.cert
+
+# Models (if they're large)
+*.pt
+*.pth
+*.h5
+models/
+
+# Wheel files
+*.whl
+
+# Static media files
+static/criminals/
+static/uploads/
+static/weaponprof/
+
+# Audio files
+*.mp3
+*.wav
+
+# Settings and other files
+settings.yaml
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

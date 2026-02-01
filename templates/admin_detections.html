@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Threat Detections</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #0a192f;
+        --secondary: #172a45;
+        --accent: #64ffda;
+        --text: #ccd6f6;
+        --highlight: #1e90ff;
+        --danger: #ff5555;
+        --warning: #ffcc00;
+        --info: #4cc9f0;
+        --success: #00cc66;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--primary);
+        color: var(--text);
+        line-height: 1.6;
+        background-image: radial-gradient(
+            circle at 10% 20%,
+            rgba(23, 42, 69, 0.1) 0%,
+            transparent 20%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(255, 85, 85, 0.1) 0%,
+            transparent 20%
+          );
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Orbitron", sans-serif;
+      }
+
+      .modal-backdrop {
+        pointer-events: none !important;
+      }
+      .modal-content {
+        pointer-events: auto !important;
+      }
+
+      .card-title {
+        color: #59e8b6;
+      }
+
+      .container {
+        /* max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem; */
+      }
+
+      .navbar-brand {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: 1px;
+        text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+      }
+
+      .nav-pills .nav-link.active {
+        background-color: var(--accent);
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .nav-pills .nav-link {
+        color: var(--text);
+        font-weight: 300;
+        border-radius: 8px;
+        margin: 0 5px;
+        flex: 1;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .nav-pills .nav-link:hover {
+        color: var(--accent);
+        background-color: rgba(100, 255, 218, 0.1);
+      }
+
+      .nav-pills {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        background-color: var(--secondary);
+        overflow: hidden;
+        border: 1px solid rgba(100, 255, 218, 0.1);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        border-color: rgba(100, 255, 218, 0.3);
+      }
+
+      .card-header {
+        background-color: rgba(23, 42, 69, 0.7);
+        color: var(--accent);
+        border-radius: 0 !important;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+      }
+
+      .map-container {
+        height: 200px;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+
+      .badge-criminal {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .badge-weapon {
+        background-color: var(--warning);
+        color: var(--primary);
+      }
+
+      .badge-violence {
+        background-color: var(--accent);
+        color: var(--primary);
+      }
+
+      .detection-time {
+        font-size: 0.8rem;
+        color: rgba(204, 214, 246, 0.7);
+      }
+
+      .btn-view-map {
+        background-color: var(--highlight);
+        color: var(--primary);
+        border: none;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-view-map:hover {
+        background-color: var(--highlight);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(30, 144, 255, 0.4);
+      }
+
+      .btn-download {
+        background-color: var(--accent);
+        color: var(--primary);
+        border: none;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-download:hover {
+        background-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+      }
+
+      .empty-state {
+        padding: 3rem;
+        text-align: center;
+        color: rgba(204, 214, 246, 0.7);
+        background-color: var(--secondary);
+        border-radius: 12px;
+        border: 1px solid rgba(100, 255, 218, 0.1);
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--accent);
+      }
+
+      .crime-marker {
+        background-color: var(--danger);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: block;
+        position: relative;
+      }
+
+      .crime-marker::after {
+        content: "";
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(255, 85, 85, 0.3);
+        border-radius: 50%;
+        top: -5px;
+        left: -5px;
+      }
+
+      .video-container {
+        position: relative;
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .video-controls {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .suspect-img {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      .case-id {
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--accent);
+      }
+
+      .evidence-details {
+        background-color: rgba(23, 42, 69, 0.7);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+        border: 1px solid rgba(100, 255, 218, 0.1);
+      }
+
+      .modal-content {
+        background-color: var(--secondary);
+        color: var(--text);
+        border-radius: 12px;
+        border: 1px solid rgba(100, 255, 218, 0.2);
+      }
+
+      .btn-close-white {
+        filter: invert(1) grayscale(100%) brightness(200%);
+      }
+
+      .suspect-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .suspect-gallery img {
+        height: 120px;
+        width: auto;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+
+      .location-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .criminal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .card-body {
+        padding: 1.25rem;
+      }
+
+      h2,
+      h4,
+      h5,
+      h6 {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .text-muted {
+        color: rgba(204, 214, 246, 0.7) !important;
+      }
+
+      .navbar {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .suspect-details {
+        padding: 1rem;
+      }
+
+      .suspect-details h4 {
+        margin-bottom: 0.5rem;
+        color: var(--accent);
+      }
+
+      .suspect-details p {
+        margin-bottom: 0.5rem;
+        color: var(--text);
+      }
+
+      .modal-header {
+        border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+      }
+
+      .modal-footer {
+        border-top: 1px solid rgba(100, 255, 218, 0.2);
+      }
+
+      .btn-outline-light {
+        border-radius: 8px;
+        color: var(--accent);
+        border-color: var(--accent);
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-light:hover {
+        background-color: var(--accent);
+        color: var(--primary);
+      }
+
+      .card-footer {
+        background-color: var(--secondary);
+        border-top: 1px solid rgba(100, 255, 218, 0.1);
+        padding: 0.75rem 1.25rem;
+      }
+
+      .card-footer .btn {
+        width: 100%;
+      }
+
+      /* Center coordinates in map modal */
+      .coordinates-center {
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Animation classes */
+      .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s ease-in forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .delay-1 {
+        animation-delay: 0.2s;
+      }
+      .delay-2 {
+        animation-delay: 0.4s;
+      }
+      .delay-3 {
+        animation-delay: 0.6s;
+      }
+      .delay-4 {
+        animation-delay: 0.8s;
+      }
+
+      /* Flash messages */
+      .flash-messages {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        width: auto;
+        max-width: 300px;
+      }
+      .flash-message {
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        opacity: 0.95;
+        animation: fadeIn 0.5s ease;
+      }
+      .flash-message.success {
+        background-color: var(--accent);
+        color: var(--primary);
+      }
+      .flash-message.error {
+        background-color: var(--danger);
+      }
+      .flash-message.warning {
+        background-color: var(--warning);
+        color: var(--primary);
+      }
+      .flash-message.info {
+        background-color: var(--highlight);
+      }
+
+      /* Navbar Styles - Updated to match CRIMSON theme */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10vh;
+        background: rgba(10, 25, 47, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        padding: 0.8rem 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      nav:hover {
+        background: rgba(23, 42, 69, 0.95);
+        border-bottom-color: rgba(100, 255, 218, 0.4);
+      }
+
+      .logo {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .logo i {
+        color: var(--accent);
+        font-size: 1.6rem;
+        transition: transform 0.3s ease;
+      }
+
+      .logo:hover i {
+        transform: rotate(-15deg);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-links a::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--highlight));
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent);
+        background: rgba(100, 255, 218, 0.1);
+      }
+
+      .nav-links a:hover::before {
+        width: 100%;
+      }
+
+      .nav-links a i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .nav-links a:hover i {
+        transform: scale(1.1);
+      }
+
+      .nav-links a.active {
+        color: var(--accent);
+        background: rgba(100, 255, 218, 0.2);
+      }
+
+      .nav-links a.active::before {
+        width: 100%;
+      }
+
+      .nav-links a.active i {
+        color: var(--accent);
+      }
+
+      /* Logout button special styling */
+      .nav-links a[href*="logout"] {
+        background: rgba(255, 85, 85, 0.1);
+        color: var(--danger);
+      }
+
+      .nav-links a[href*="logout"]:hover {
+        background: rgba(255, 85, 85, 0.2);
+        color: var(--danger);
+      }
+
+      .nav-links a[href*="logout"]::before {
+        background: var(--danger);
+      }
+
+      /* Mobile menu toggle */
+      .menu-toggle {
+        display: none;
+        cursor: pointer;
+        color: var(--text);
+        font-size: 1.5rem;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 1200px) {
+        .nav-links {
+          gap: 1rem;
+        }
+      }
+
+      @media (max-width: 992px) {
+        nav {
+          padding: 1rem 5%;
+        }
+
+        .nav-links {
+          gap: 0.8rem;
+        }
+
+        .nav-links a {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1rem 5%;
+          height: auto;
+        }
+
+        .logo {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+
+        .nav-links {
+          display: none;
+          width: 100%;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-top: 1rem;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .nav-links a {
+          width: 100%;
+          padding: 0.8rem 0;
+          justify-content: center;
+          border-radius: 0;
+          border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .nav-links a::before {
+          display: none;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .logo {
+          font-size: 1.3rem;
+        }
+
+        .logo i {
+          font-size: 1.4rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .criminal-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-pills {
+          flex-direction: column;
+        }
+
+        .nav-pills .nav-link {
+          margin: 5px 0;
+        }
+      }
+
+      /* Fix for modal visibility */
+      .modal {
+        background-color: rgba(0, 0, 0, 0.7) !important;
+      }
+      .modal-backdrop {
+        opacity: 0 !important;
+      }
+      .modal-content {
+        opacity: 1 !important;
+      }
+    </style>
+  </head>
+  <body style="padding-top: 12vh">
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+
+
+    
+
+    <!-- Navbar -->
+    <nav>
+      <div class="logo">
+        <span><i class="fas fa-shield-alt"></i> CRIMSON</span>
+        <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
+      </div>
+
+      <div class="nav-links" id="navLinks">
+        <a
+          href="{{ url_for('admin.admin_dashboard') }}"
+          class="{{ 'active' if active_page == 'dashboard' }}"
+        >
+          <i class="fas fa-home"></i> <span>Dashboard</span>
+        </a>
+        <a
+          href="{{ url_for('auth.change_password') }}"
+          class="{{ 'active' if active_page == 'security' }}"
+        >
+          <i class="fas fa-lock"></i> <span>Security</span>
+        </a>
+        <a
+          href="{{ url_for('admin.edit_profile') }}"
+          class="{{ 'active' if active_page == 'profile' }}"
+        >
+          <i class="fas fa-user-secret"></i> <span>Profile</span>
+        </a>
+        <a
+          href="{{ url_for('admin.manage_complaints') }}"
+          class="{{ 'active' if active_page == 'complaints' }}"
+        >
+          <i class="fa-solid fa-book"></i> <span>Complaints</span>
+        </a>
+        <a
+          href="{{ url_for('admin.show_detections') }}"
+          class="{{ 'active' if active_page == 'detections' }}"
+        >
+          <i class="fa-solid fa-eye"></i> <span>Detections</span>
+        </a>
+        <a
+          href="{{ url_for('admin.detection_control') }}"
+          class="{{ 'active' if active_page == 'detection_control' }}"
+        >
+          <i class="fa-solid fa-play"></i> <span>Start Detection</span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="container" data-aos="fade-up">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+          <i class="fas fa-clipboard-list me-2"></i>Detection Reports
+        </h2>
+        <div>
+          <span class="badge bg-danger me-2"
+            >Criminal: {{ criminal_grouped|length or 0 }}</span
+          >
+          <span class="badge bg-warning text-dark me-2"
+            >Weapon: {{ weapon_detections|length or 0 }}</span
+          >
+          <span
+            class="badge"
+            style="background-color: var(--accent); color: var(--primary)"
+            >Violence: {{ violence_detections|length or 0 }}</span
+          >
+        </div>
+      </div>
+
+      <!-- Tabs - Updated with better spacing -->
+      <ul class="nav nav-pills mb-4">
+        <li class="nav-item">
+          <button
+            class="nav-link active"
+            data-bs-toggle="pill"
+            data-bs-target="#criminal-tab"
+            style="background-color: #237c0e"
+          >
+            <i class="fas fa-user-secret me-1"></i> Criminal
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#weapon-tab"
+            style="background-color: #237c0e"
+          >
+            <i class="fas fa-gun me-1"></i> Weapon
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            data-bs-toggle="pill"
+            data-bs-target="#violence-tab"
+            style="background-color: #237c0e"
+          >
+            <i class="fas fa-hand-fist me-1"></i> Violence
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- Criminal Tab -->
+        <div class="tab-pane fade show active" id="criminal-tab">
+          {% if criminal_grouped %}
+          <div class="criminal-grid">
+            {% for cid, group in criminal_grouped.items() %}
+            <div class="card">
+              <div class="card-header d-flex align-items-center">
+                <div class="d-flex align-items-center">
+                  <span class="badge badge-criminal me-2"
+                    ><i class="fas fa-user-secret me-1"></i>CRIMINAL</span
+                  >
+                  <span class="case-id">Case #{{ cid }}</span>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    {% if group[0].photo %}
+                    <img
+                      src="{{ url_for('static', filename=group[0].photo.replace('static/', '')) }}"
+                      class="suspect-img rounded mb-3"
+                      alt="Suspect image"
+                    />
+                    {% else %}
+                    <div
+                      class="suspect-img rounded mb-3"
+                      style="
+                        background-color: var(--secondary);
+                        border: 1px solid rgba(100, 255, 218, 0.1);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <i
+                        class="fas fa-user-secret fa-5x"
+                        style="color: var(--accent)"
+                      ></i>
+                    </div>
+                    {% endif %}
+
+                    <div class="suspect-details">
+                      <h4>{{ group[0].name or 'Unknown Suspect' }}</h4>
+                      <p class="text-muted">
+                        {{ group[0].crime_type or 'Unspecified Crime' }}
+                      </p>
+
+                      <div class="mb-3">
+                        <span
+                          class="badge"
+                          style="background-color: var(--primary)"
+                          ><i class="fas fa-calendar me-1"></i> {{ group[0].date
+                          }}</span
+                        >
+                        <span
+                          class="badge"
+                          style="background-color: var(--primary)"
+                          ><i class="fas fa-clock me-1"></i> {{ group[0].time
+                          }}</span
+                        >
+                      </div>
+
+                      <div
+                        class="d-flex justify-content-between align-items-center mb-3"
+                      >
+                        <span
+                          class="badge"
+                          style="
+                            background-color: var(--highlight);
+                            color: var(--primary);
+                          "
+                          >{{ group|length }} incidents</span
+                        >
+                        {% if group[0].latitude and group[0].longitude %}
+                        <button
+                          class="btn btn-sm btn-view-map"
+                          onclick="showMapModal({{ group[0].latitude }}, {{ group[0].longitude }}, 'Criminal Case #{{ cid }}')"
+                        >
+                          <i class="fas fa-map-marker-alt me-1"></i> Map
+                        </button>
+                        {% endif %}
+                      </div>
+
+                      <div class="evidence-details">
+                        <h6><i class="fas fa-info-circle me-2"></i>Details</h6>
+                        <p class="small">
+                          {{ group[0].details|truncate(100) or 'No additional
+                          details available.' }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button
+                  class="btn btn-sm btn-outline-light"
+                  data-bs-toggle="modal"
+                  data-bs-target="#caseModal-{{ loop.index }}"
+                >
+                  <i class="fas fa-search me-1"></i> View Full Details
+                </button>
+              </div>
+            </div>
+
+            <!-- Case Modal -->
+            <div
+              class="modal fade"
+              id="caseModal-{{ loop.index }}"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-lg" style="padding-top: 15vh; padding-bottom: 5vh;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Case #{{ cid }} Details</h5>
+                    <button
+                      type="button"
+                      class="btn-close btn-close-white"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body ">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="suspect-gallery">
+                          {% for det in group %} {% if det.photo %}
+                          <img
+                            src="{{ url_for('static', filename=det.photo.replace('static/', '')) }}"
+                            class="img-fluid rounded"
+                            alt="Suspect image"
+                          />
+                          {% endif %} {% endfor %}
+                        </div>
+
+                        <div class="evidence-details mt-3">
+                          <h6>
+                            <i class="fas fa-fingerprint me-2"></i>Suspect
+                            Details
+                          </h6>
+                          <ul class="list-unstyled">
+                            <li>
+                              <strong>Name:</strong> {{ group[0].name or
+                              'Unknown' }}
+                            </li>
+                            <li>
+                              <strong>Crime Type:</strong> {{
+                              group[0].crime_type or 'Unspecified' }}
+                            </li>
+                            <li>
+                              <strong>Incidents:</strong> {{ group|length }}
+                            </li>
+                            <li>
+                              <strong>First Seen:</strong> {{ group[0].date }}
+                              {{ group[0].time }}
+                            </li>
+                            <li>
+                              <strong>Last Seen:</strong> {{ group[-1].date }}
+                              {{ group[-1].time }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        {% if group[0].latitude and group[0].longitude %}
+                        <div
+                          id="caseMap-{{ loop.index }}"
+                          style="height: 300px; border-radius: 8px"
+                        ></div>
+                        <div class="mt-2 text-center">
+                          <small class="text-muted">
+                            Coordinates: {{ "%.4f"|format(group[0].latitude) }},
+                            {{ "%.4f"|format(group[0].longitude) }}
+                          </small>
+                        </div>
+                        {% else %}
+                        <div
+                          class="p-5 text-center text-muted"
+                          style="
+                            background-color: var(--secondary);
+                            border-radius: 8px;
+                            border: 1px solid rgba(100, 255, 218, 0.1);
+                          "
+                        >
+                          <i
+                            class="fas fa-map-marked-alt fa-3x mb-2"
+                            style="color: var(--accent)"
+                          ></i>
+                          <p class="mb-0">No location data available</p>
+                        </div>
+                        {% endif %}
+
+                        <div class="evidence-details mt-3">
+                          <h6>
+                            <i class="fas fa-clipboard-list me-2"></i>Case
+                            Summary
+                          </h6>
+                          <p>
+                            {{ group[0].details or 'No case details available.'
+                            }}
+                          </p>
+                        </div>
+
+                        <div class="evidence-details mt-3">
+                          <h6>
+                            <i class="fas fa-list me-2"></i>Incident Details
+                          </h6>
+                          <ul class="list-unstyled">
+                            {% for det in group %}
+                            <li class="mb-2">
+                              <i
+                                class="fas fa-circle"
+                                style="
+                                  color: var(--accent);
+                                  font-size: 0.5rem;
+                                  margin-right: 0.5rem;
+                                "
+                              ></i>
+                              {{ det.date }} {{ det.time }} - {% if det.latitude
+                              and det.longitude %} Location: {{
+                              "%.4f"|format(det.latitude) }}, {{
+                              "%.4f"|format(det.longitude) }} {% else %} No
+                              location description {% endif %}
+                            </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-user-secret"></i>
+            <h4>No Criminal Detections</h4>
+            <p class="text-muted">
+              No criminal activity has been detected yet.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Weapon Tab -->
+        <div class="tab-pane fade" id="weapon-tab">
+          {% if weapon_detections %}
+          <div class="row">
+            {% for wd in weapon_detections %}
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                {% if wd.profile_image %}
+                <img
+                  src="{{ url_for('static', filename=wd.profile_image.replace('static/', '')) }}"
+                  class="card-img-top"
+                  alt="Weapon"
+                  style="height: 200px; object-fit: cover"
+                />
+                {% else %}
+                <div
+                  class="p-5 text-center text-muted"
+                  style="background-color: var(--secondary)"
+                >
+                  <i
+                    class="fas fa-gun fa-3x mb-2"
+                    style="color: var(--accent)"
+                  ></i>
+                  <p class="mb-0">No image available</p>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">
+                      {{ wd.weapon_type or 'Unknown Weapon' }}
+                    </h5>
+
+                    <span
+                      class="badge"
+                      style="
+                        background-color: var(--warning);
+                        color: var(--primary);
+                      "
+                      >{{ wd.weapon_type or 'Unknown Weapon' }}</span
+                    >
+                  </div>
+
+                  {% if wd.location and wd.location.latitude and
+                  wd.location.longitude %}
+                  <div class="mt-3">
+                    <button
+                      class="btn btn-sm btn-view-map mb-2"
+                      onclick="showMapModal({{ wd.location.latitude }}, {{ wd.location.longitude }}, 'Weapon Detection')"
+                    >
+                      <i class="fas fa-map-marker-alt me-1"></i> View Location
+                    </button>
+                    <div class="d-flex justify-content-between small">
+                      <span class="text-muted">Lat:</span>
+                      <span class="card-title"
+                        >{{ "%.4f"|format(wd.location.latitude) }}</span
+                      >
+                    </div>
+                    <div class="d-flex justify-content-between small">
+                      <span class="text-muted">Lng:</span>
+                      <span class="card-title"
+                        >{{ "%.4f"|format(wd.location.longitude) }}</span
+                      >
+                    </div>
+                  </div>
+                  {% else %}
+                  <p class="text-muted small">Location not recorded</p>
+                  {% endif %}
+
+                  <div class="detection-time mt-2">
+                    <i class="far fa-clock me-1"></i>
+                    {{ wd.date or 'N/A' }} {{ wd.time or '' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-gun"></i>
+            <h4>No Weapon Detections</h4>
+            <p class="text-muted">No weapons have been detected yet.</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Violence Tab -->
+        <div class="tab-pane fade" id="violence-tab">
+          {% if violence_detections %}
+          <div class="row">
+            {% for vd in violence_detections %}
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                {% if vd.video %}
+                <div class="video-container" style="height: 200px">
+                  <video class="w-100 h-100" controls style="object-fit: cover">
+                    <source
+                      src="{{ url_for('static', filename=vd.video.replace('static/', '', 1)) }}"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+                {% else %}
+                <div
+                  class="p-5 text-center text-muted"
+                  style="background-color: var(--secondary)"
+                >
+                  <i
+                    class="fas fa-video-slash fa-3x mb-2"
+                    style="color: var(--accent)"
+                  ></i>
+                  <p class="mb-0">No video available</p>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title text-capitalize">
+                      {{ vd.violence_type or 'Violent Activity' }}
+                    </h5>
+                    <span
+                      class="badge"
+                      style="
+                        background-color: var(--accent);
+                        color: var(--primary);
+                      "
+                    >
+                      {{ vd.violence_type or 'Violent Activity' }}
+                    </span>
+                  </div>
+
+                  <div class="mt-2">
+                    <div class="d-flex justify-content-between">
+                      <span class="text-muted small">Date:</span>
+                      <span class="card-title">{{ vd.date or 'N/A' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-muted small">Time:</span>
+                      <span class="card-title">{{ vd.time or 'N/A' }}</span>
+                    </div>
+                  </div>
+
+                  {% if vd.location and vd.location.lat and vd.location.lng %}
+                  <div class="location-buttons">
+                    <a
+                      href="{{ url_for('download_video') }}?path={{ vd.video }}"
+                      class="btn btn-sm btn-download"
+                    >
+                      <i class="fas fa-download me-1"></i> Download
+                    </a>
+                    <button
+                      class="btn btn-sm btn-view-map"
+                      onclick="showMapModal({{ vd.location.lat }}, {{ vd.location.lng }}, 'Violence Detection')"
+                    >
+                      <i class="fas fa-map-marker-alt me-1"></i> View Map
+                    </button>
+                  </div>
+                  <div class="mt-2">
+                    <div class="d-flex justify-content-between small">
+                      <span class="text-muted">Lat:</span>
+                      <span class="card-title"
+                        >{{ "%.4f"|format(vd.location.lat) }}</span
+                      >
+                    </div>
+                    <div class="d-flex justify-content-between small">
+                      <span class="text-muted">Lng:</span>
+                      <span class="card-title"
+                        >{{ "%.4f"|format(vd.location.lng) }}</span
+                      >
+                    </div>
+                  </div>
+                  {% else %}
+                  <div class="location-buttons mt-3">
+                    <a
+                      href="{{ url_for('download_video') }}?path={{ vd.video }}"
+                      class="btn btn-sm btn-download"
+                    >
+                      <i class="fas fa-download me-1"></i> Download
+                    </a>
+                  </div>
+                  <p class="text-muted small mt-2">Location not recorded</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-hand-fist"></i>
+            <h4>No Violence Detections</h4>
+            <p class="text-muted">No violent activity has been detected yet.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Modal -->
+    <div class="modal fade" id="mapModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mapModalTitle">Detection Location</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body p-0">
+            <div id="modalMap" style="height: 500px"></div>
+          </div>
+          <div class="modal-footer">
+            <span
+              id="coordinatesDisplay"
+              class="coordinates-center text-muted"
+            ></span>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      // Initialize AOS animations
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out-quad',
+        once: true
+      });
+
+      // Initialize maps for criminal case modals
+      document.addEventListener('DOMContentLoaded', function() {
+        {% if criminal_grouped %}
+          {% for cid, group in criminal_grouped.items() %}
+            {% if group[0].latitude and group[0].longitude %}
+              initCaseMap('caseMap-{{ loop.index }}',
+                         {{ group[0].latitude }},
+                         {{ group[0].longitude }},
+                         'Case #{{ cid }}');
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      });
+
+      // Initialize a case map in modal
+      function initCaseMap(containerId, lat, lng, title) {
+        const map = L.map(containerId).setView([lat, lng], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Custom crime marker
+        const crimeIcon = L.divIcon({
+          className: 'crime-marker',
+          iconSize: [20, 20]
+        });
+
+        L.marker([lat, lng], {icon: crimeIcon}).addTo(map)
+          .bindPopup(`<b>${title}</b><br>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`)
+          .openPopup();
+      }
+
+      // Show modal with map
+      function showMapModal(lat, lng, title) {
+        const modal = new bootstrap.Modal(document.getElementById('mapModal'));
+        const modalTitle = document.getElementById('mapModalTitle');
+        const coordsDisplay = document.getElementById('coordinatesDisplay');
+        modal.show();
+        modalTitle.textContent = title;
+
+        // Clear previous map
+        document.getElementById('modalMap').innerHTML = "";
+
+        // Mapbox access token
+        mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
+
+        // Function to initialize map
+        const initMap = (centerLat, centerLng) => {
+            const map = new mapboxgl.Map({
+                container: 'modalMap',
+                style: 'mapbox://styles/mapbox/streets-v12', // Changed to streets for better readability
+                center: [centerLng, centerLat],
+                zoom: 14
+            });
+
+            // Add zoom/rotation controls
+            map.addControl(new mapboxgl.NavigationControl());
+
+            // Add marker
+            const marker = new mapboxgl.Marker({ color: 'red', draggable: true })
+                .setLngLat([centerLng, centerLat])
+                .addTo(map);
+
+            // Function to update location details
+            const updateLocation = async (lng, lat) => {
+                coordsDisplay.textContent = `Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`;
+                
+                try {
+                    const res = await fetch(
+                        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxgl.accessToken}`
+                    );
+                    const data = await res.json();
+                    const placeName = data.features?.[0]?.place_name || "Unknown location";
+                    
+                    const popup = new mapboxgl.Popup({ offset: 25 })
+                        .setText(placeName);
+                    
+                    marker.setPopup(popup).togglePopup();
+                    coordsDisplay.textContent += ` | ${placeName}`;
+                } catch (e) {
+                    console.error("Reverse geocoding failed", e);
+                    coordsDisplay.textContent += ` | Location lookup failed`;
+                }
+            };
+
+            // Initial update
+            updateLocation(centerLng, centerLat);
+
+            // Map click listener
+            map.on('click', (e) => {
+                const { lng, lat } = e.lngLat;
+                marker.setLngLat([lng, lat]);
+                updateLocation(lng, lat);
+            });
+            
+            // Marker drag listener
+            marker.on('dragend', () => {
+                const lngLat = marker.getLngLat();
+                updateLocation(lngLat.lng, lngLat.lat);
+            });
+
+            // Fix for modal rendering
+            setTimeout(() => map.resize(), 300);
+        };
+
+        // Use passed coordinates if available, otherwise try geolocation
+        if (lat && lng) {
+            initMap(lat, lng);
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    initMap(position.coords.latitude, position.coords.longitude);
+                },
+                error => {
+                    console.error("Geolocation error:", error);
+                    // Fallback to a default location (e.g., New York) or handle error
+                    coordsDisplay.textContent = "Location not provided and geolocation failed.";
+                    initMap(40.7128, -74.0060); // Default fallback
+                }
+            );
+        } else {
+            coordsDisplay.textContent = "Location not provided and geolocation not supported.";
+             initMap(40.7128, -74.0060); // Default fallback
+        }
+      }
+
+
+      // Auto-hide flash messages
+      setTimeout(() => {
+        const messages = document.querySelectorAll('.flash-message');
+        messages.forEach(msg => {
+          msg.style.transition = 'opacity 0.5s ease';
+          msg.style.opacity = '0';
+          setTimeout(() => msg.remove(), 500);
+        });
+      }, 3000); // auto-hide after 3 seconds
+
+      // Toggle mobile menu
+      function toggleMenu() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+      }
+
+      // Close menu when clicking outside on mobile
+      document.addEventListener('click', function(event) {
+        const nav = document.querySelector('nav');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (window.innerWidth <= 768 &&
+            !nav.contains(event.target) &&
+            event.target !== menuToggle) {
+          navLinks.classList.remove('active');
+        }
+      });
+    </script>
+  </body>
+</html>
